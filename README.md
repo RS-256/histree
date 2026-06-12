@@ -3,6 +3,9 @@
 A Chrome/Edge extension that manages each tab's browsing history as a tree.
 Even when navigation branches, you can return to any previous page with one click from the side panel tree.
 
+<img src="docs/example_tree_1.png" width="280" alt="Example side panel history tree">
+<img src="docs/example_tree_2.png" width="280" alt="Example side panel history tree">
+
 ## Installation (Development)
 
 ### Chrome
@@ -16,11 +19,6 @@ Even when navigation branches, you can return to any previous page with one clic
 3. Click "Load unpacked" and select this folder
 
 Click the toolbar icon to open the side panel.
-
-## Example
-
-<img src="docs/example_tree_1.png" width="280" alt="Example side panel history tree">
-<img src="docs/example_tree_2.png" width="280" alt="Example side panel history tree">
 
 ## Behavior
 
@@ -40,16 +38,3 @@ Click the toolbar icon to open the side panel.
 ## Future Work (Out of Scope)
 
 - Collapsible child-tab trees inside the parent tab tree
-
-## File Structure
-
-```
-manifest.json          MV3 manifest
-src/
-  background.js        Navigation tracking and tree management (service worker)
-  sidepanel/
-    sidepanel.html     Side panel UI
-    sidepanel.css      Tree rendering styles
-    sidepanel.js       Rendering, tab-switch tracking, and jump handling
-icons/                 Extension icons
-```
