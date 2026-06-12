@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>履歴ツリー</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <header class="panel-header">
+    <span class="panel-title">履歴ツリー</span>
+    <span class="tab-label" id="tabLabel"></span>
+  </header>
+
+  <main id="treeContainer" class="tree-container">
+    <div class="empty-state" id="emptyState">
+      このタブの履歴はまだありません。<br />
+      ページを移動するとツリーが育ちます。
+    </div>
+  </main>
+
+  <div class="tooltip" id="tooltip" hidden>
+    <div class="tooltip-title" id="tooltipTitle"></div>
+    <div class="tooltip-url" id="tooltipUrl"></div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

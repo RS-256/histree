@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Tree History",
+  "version": "0.1.0",
+  "description": "タブごとの訪問履歴をツリーで管理。分岐しても元のページへワンクリックで戻れます。",
+  "permissions": [
+    "tabs",
+    "webNavigation",
+    "storage",
+    "sidePanel",
+    "favicon"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  },
+  "action": {
+    "default_title": "履歴ツリーを開く"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
