@@ -11,6 +11,10 @@ const tabLabel = document.getElementById("tabLabel");
 const tooltip = document.getElementById("tooltip");
 const tooltipTitle = document.getElementById("tooltipTitle");
 const tooltipUrl = document.getElementById("tooltipUrl");
+const contextMenu = document.getElementById("contextMenu");
+const deleteSubtreeButton = document.getElementById("deleteSubtreeButton");
+
+let contextNodeId = null;
 
 // Layout constants.
 const NODE_R = 16;      // Node radius for the 32px circle.
@@ -74,6 +78,7 @@ function layoutTree(tree) {
 // ---- Tree Rendering ----
 async function refresh() {
   if (activeTabId == null) return;
+  hideContextMenu();
 
   const [{ tree }, tab] = await Promise.all([
     chrome.runtime.sendMessage({ type: "getTree", tabId: activeTabId }),
@@ -162,6 +167,7 @@ async function refresh() {
     btn.addEventListener("mousemove", moveTooltip);
     btn.addEventListener("mouseleave", hideTooltip);
     btn.addEventListener("click", () => onNodeClick(n));
+    btn.addEventListener("contextmenu", (e) => showContextMenu(e, n));
 
     canvas.appendChild(btn);
   }
@@ -190,6 +196,7 @@ async function refresh() {
 
 function onNodeClick(node) {
   hideTooltip();
+  hideContextMenu();
   if (node.spawnedTabId != null) {
     // Child tab branch node: activate that child tab.
     chrome.tabs.update(node.spawnedTabId, { active: true }).catch(() => {
@@ -203,6 +210,43 @@ function onNodeClick(node) {
       type: "jumpToNode", tabId: activeTabId, nodeId: node.id,
     });
   }
+}
+
+// ---- Context Menu ----
+function showContextMenu(e, node) {
+  e.preventDefault();
+  e.stopPropagation();
+  hideTooltip();
+
+  contextNodeId = node.id;
+  deleteSubtreeButton.disabled = !node.children.length;
+  contextMenu.hidden = false;
+
+  const rect = contextMenu.getBoundingClientRect();
+  const pad = 6;
+  let x = e.clientX;
+  let y = e.clientY;
+  if (x + rect.width > window.innerWidth - pad) x = window.innerWidth - rect.width - pad;
+  if (y + rect.height > window.innerHeight - pad) y = window.innerHeight - rect.height - pad;
+  contextMenu.style.left = `${Math.max(pad, x)}px`;
+  contextMenu.style.top = `${Math.max(pad, y)}px`;
+}
+
+function hideContextMenu() {
+  contextMenu.hidden = true;
+  contextNodeId = null;
+}
+
+async function deleteContextSubtree() {
+  if (!contextNodeId || activeTabId == null) return;
+  const nodeId = contextNodeId;
+  hideContextMenu();
+  await chrome.runtime.sendMessage({
+    type: "deleteSubtreeBelow",
+    tabId: activeTabId,
+    nodeId,
+  });
+  refresh();
 }
 
 // ---- Tooltip ----
@@ -227,6 +271,29 @@ function hideTooltip() {
 }
 
 // ---- Events ----
+
+deleteSubtreeButton.addEventListener("click", deleteContextSubtree);
+
+document.addEventListener("click", (e) => {
+  if (!contextMenu.hidden && !contextMenu.contains(e.target)) hideContextMenu();
+});
+
+document.addEventListener("contextmenu", (e) => {
+  if (!contextMenu.hidden && !contextMenu.contains(e.target) && !e.target.closest(".node")) {
+    hideContextMenu();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    hideContextMenu();
+    hideTooltip();
+  }
+});
+
+window.addEventListener("blur", hideContextMenu);
+window.addEventListener("resize", hideContextMenu);
+treeContainer.addEventListener("scroll", hideContextMenu);
 
 chrome.runtime.onMessage.addListener((msg) => {
   if (msg.type === "treeUpdated" && msg.tabId === activeTabId) {

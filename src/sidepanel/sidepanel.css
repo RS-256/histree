@@ -180,6 +180,41 @@ svg.edges {
   -webkit-box-orient: vertical;
 }
 
+/* ---- Context Menu ---- */
+.context-menu {
+  position: fixed;
+  min-width: 176px;
+  padding: 4px;
+  background: var(--node-bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  z-index: 20;
+}
+.context-menu button {
+  width: 100%;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.context-menu button:hover,
+.context-menu button:focus-visible {
+  background: color-mix(in srgb, var(--current) 12%, transparent);
+  outline: none;
+}
+.context-menu button:disabled {
+  color: var(--fg-muted);
+  cursor: default;
+}
+.context-menu button:disabled:hover {
+  background: transparent;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .node { transition: none; }
   .node:hover { transform: none; }

@@ -103,6 +103,34 @@ function findNodeByUrl(tree, url) {
   return null;
 }
 
+function collectDescendantIds(tree, nodeId) {
+  const descendants = [];
+  const queue = [...(tree.nodes[nodeId]?.children || [])];
+  while (queue.length) {
+    const id = queue.shift();
+    const node = tree.nodes[id];
+    if (!node) continue;
+    descendants.push(id);
+    queue.push(...node.children);
+  }
+  return descendants;
+}
+
+function deleteSubtreeBelow(tree, nodeId) {
+  const node = tree.nodes[nodeId];
+  if (!node) return false;
+
+  const descendants = collectDescendantIds(tree, nodeId);
+  if (!descendants.length) return false;
+
+  const deleted = new Set(descendants);
+  for (const id of descendants) delete tree.nodes[id];
+
+  node.children = [];
+  if (deleted.has(tree.currentNodeId)) tree.currentNodeId = nodeId;
+  return true;
+}
+
 function shouldIgnoreUrl(url) {
   if (!url) return true;
   // Do not record extension pages, devtools, and similar internal pages.
@@ -326,6 +354,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       pendingJumps[msg.tabId] = { nodeId: node.id, url: node.url };
       await chrome.tabs.update(msg.tabId, { url: node.url });
       sendResponse({ ok: true });
+      return;
+    }
+
+    if (msg.type === "deleteSubtreeBelow") {
+      const tree = state.trees[msg.tabId];
+      if (!tree || !tree.nodes[msg.nodeId]) {
+        sendResponse({ ok: false });
+        return;
+      }
+
+      const changed = deleteSubtreeBelow(tree, msg.nodeId);
+      if (changed) {
+        scheduleSave(state);
+        notifyPanel(msg.tabId);
+      }
+      sendResponse({ ok: true, changed });
       return;
     }
 
