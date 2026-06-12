@@ -17,6 +17,11 @@ Even when navigation branches, you can return to any previous page with one clic
 
 Click the toolbar icon to open the side panel.
 
+## Example
+
+<img src="docs/example_tree_1.png" width="280" alt="Example side panel history tree">
+<img src="docs/example_tree_2.png" width="280" alt="Example side panel history tree">
+
 ## Behavior
 
 - **Tree view**: Shows only the history tree for the currently active tab. The tree switches automatically when you switch tabs.
