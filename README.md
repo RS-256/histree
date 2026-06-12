@@ -1,50 +1,50 @@
 # Tab Tree History
 
-タブごとの訪問履歴をツリーで管理するChrome/Edge拡張機能。
-ページ遷移が分岐しても、サイドパネルのツリーから過去のどのページへもワンクリックで戻れます。
+A Chrome/Edge extension that manages each tab's browsing history as a tree.
+Even when navigation branches, you can return to any previous page with one click from the side panel tree.
 
-## インストール(開発版)
+## Installation (Development)
 
 ### Chrome
-1. `chrome://extensions` を開く
-2. 右上の「デベロッパーモード」をON
-3. 「パッケージ化されていない拡張機能を読み込む」→ このフォルダを選択
+1. Open `chrome://extensions`
+2. Turn on "Developer mode" in the top-right corner
+3. Click "Load unpacked" and select this folder
 
 ### Edge
-1. `edge://extensions` を開く
-2. 左下の「開発者モード」をON
-3. 「展開して読み込み」→ このフォルダを選択
+1. Open `edge://extensions`
+2. Turn on "Developer mode" in the bottom-left corner
+3. Click "Load unpacked" and select this folder
 
-ツールバーのアイコンをクリックするとサイドパネルが開きます。
+Click the toolbar icon to open the side panel.
 
-## 仕様
+## Behavior
 
-- **ツリー表示**: 現在アクティブなタブの履歴ツリーのみ表示。タブを切り替えるとツリーも自動で切り替わる
-- **ノード**: ファビコンのみのコンパクト表示。ホバーでタイトル+URLをツールチップ表示
-- **現在地**: 青いリング+グローで表示
-- **ジャンプ**: ノードをクリックすると現在地マーカーがそのノードへ移動し、ページも遷移する。
-  過去のツリーは削除されない。ジャンプ後に別ページへ移動すると、そこから新しい分岐が生える
-- **戻る/進むボタン**: ブラウザの履歴ボタン操作は既存ノード間のマーカー移動として扱う(重複ノードを作らない)
-- **新規タブ継承**:
-  - 親タブ側: 子タブの最初のページを紫の点線リングノードとして表示。下に消えていく点線付き。
-    クリックするとその子タブへフォーカス移動
-  - 子タブ側: ツリーの先頭に「親タブから」の点線注釈。クリックで親タブへ移動
-- **新規タブページ**: `chrome://newtab` も1つのノードとして記録
-- **保存範囲**: ブラウザセッション内(`chrome.storage.session`)。タブを閉じるとそのツリーは破棄
+- **Tree view**: Shows only the history tree for the currently active tab. The tree switches automatically when you switch tabs.
+- **Nodes**: Compact favicon-only nodes. Hovering shows the title and URL in a tooltip.
+- **Current position**: Shown with a blue ring and glow.
+- **Jumping**: Clicking a node moves the current-position marker to that node and navigates the page there.
+  Existing history is not deleted. If you navigate elsewhere after jumping, a new branch grows from that point.
+- **Back/forward buttons**: Browser history button actions move the marker between existing nodes instead of creating duplicate nodes.
+- **New tab inheritance**:
+  - Parent tab side: Shows the child tab's first page as a purple dashed-ring node with a dotted line fading downward.
+    Clicking it focuses that child tab.
+  - Child tab side: Shows a dotted "From parent tab" annotation at the beginning of the tree. Clicking it moves to the parent tab.
+- **New tab page**: Records `chrome://newtab` as a node.
+- **Storage scope**: Kept within the browser session via `chrome.storage.session`. Closing a tab discards its tree.
 
-## 将来対応(スコープ外)
+## Future Work (Out of Scope)
 
-- 親タブ側で子タブのツリーを折りたたみ展開表示
+- Collapsible child-tab trees inside the parent tab tree
 
-## ファイル構成
+## File Structure
 
 ```
-manifest.json          MV3マニフェスト
+manifest.json          MV3 manifest
 src/
-  background.js        ナビゲーション追跡・ツリー管理(service worker)
+  background.js        Navigation tracking and tree management (service worker)
   sidepanel/
-    sidepanel.html     サイドパネルUI
-    sidepanel.css      ツリー描画スタイル
-    sidepanel.js       描画・タブ切替追従・ジャンプ処理
-icons/                 拡張機能アイコン
+    sidepanel.html     Side panel UI
+    sidepanel.css      Tree rendering styles
+    sidepanel.js       Rendering, tab-switch tracking, and jump handling
+icons/                 Extension icons
 ```
