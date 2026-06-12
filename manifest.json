@@ -11,10 +11,10 @@
     "favicon"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background.js"
   },
   "side_panel": {
-    "default_path": "sidepanel/sidepanel.html"
+    "default_path": "src/sidepanel/sidepanel.html"
   },
   "action": {
     "default_title": "履歴ツリーを開く"

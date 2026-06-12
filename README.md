@@ -40,10 +40,11 @@
 
 ```
 manifest.json          MV3マニフェスト
-background.js          ナビゲーション追跡・ツリー管理(service worker)
-sidepanel/
-  sidepanel.html       サイドパネルUI
-  sidepanel.css        ツリー描画スタイル
-  sidepanel.js         描画・タブ切替追従・ジャンプ処理
+src/
+  background.js        ナビゲーション追跡・ツリー管理(service worker)
+  sidepanel/
+    sidepanel.html     サイドパネルUI
+    sidepanel.css      ツリー描画スタイル
+    sidepanel.js       描画・タブ切替追従・ジャンプ処理
 icons/                 拡張機能アイコン
 ```
