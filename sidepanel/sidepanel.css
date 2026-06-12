@@ -1,17 +1,17 @@
 /* ============================================================
-   Tab Tree History - side panel styles
+   Tab Tree History - side panel styles (vertical layout)
    ============================================================ */
 
 :root {
   --bg: #fafafa;
   --fg: #1f2328;
   --fg-muted: #6b7280;
-  --line: #c9ced6;
+  --line: #b8bfc9;
   --node-bg: #ffffff;
   --node-border: #c9ced6;
-  --current: #2f81f7;          /* 現在地リング */
+  --current: #2f81f7;          /* Current position ring */
   --current-glow: rgba(47, 129, 247, 0.25);
-  --spawn: #a371f7;            /* 子タブ分岐リング */
+  --spawn: #a371f7;            /* Child tab branch ring */
   --tooltip-bg: #1f2328;
   --tooltip-fg: #fafafa;
 }
@@ -21,7 +21,7 @@
     --bg: #16191d;
     --fg: #e6e8eb;
     --fg-muted: #8b939e;
-    --line: #3a414b;
+    --line: #444c57;
     --node-bg: #21262d;
     --node-border: #3a414b;
     --current: #4c9aff;
@@ -39,10 +39,9 @@ body {
   color: var(--fg);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 13px;
-  overflow-x: hidden;
 }
 
-/* ---- ヘッダー ---- */
+/* ---- Header ---- */
 .panel-header {
   position: sticky;
   top: 0;
@@ -64,8 +63,16 @@ body {
   flex: 1;
 }
 
-/* ---- ツリー ---- */
-.tree-container { padding: 12px 8px 24px; }
+/* ---- Tree Canvas ---- */
+.tree-container {
+  padding: 8px 0 24px;
+  overflow-x: auto;   /* Horizontally scroll wide trees. */
+}
+
+.tree-canvas {
+  position: relative;
+  margin: 0 auto;     /* Center when narrower than the panel. */
+}
 
 .empty-state {
   padding: 32px 16px;
@@ -74,46 +81,28 @@ body {
   line-height: 1.7;
 }
 
-ul.tree, ul.tree ul {
-  list-style: none;
-  padding-left: 18px;
-}
-ul.tree { padding-left: 6px; }
-
-ul.tree li {
-  position: relative;
-  padding: 2px 0 2px 16px;
-}
-
-/* 縦の接続線 */
-ul.tree li::before {
-  content: "";
+/* ---- Connector Lines (SVG) ---- */
+svg.edges {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  border-left: 2px solid var(--line);
+  inset: 0;
+  pointer-events: none;
 }
-ul.tree li:last-child::before { height: 18px; bottom: auto; }
-
-/* 横の接続線 */
-ul.tree li::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 18px;
-  width: 14px;
-  border-top: 2px solid var(--line);
+.edge {
+  stroke: var(--line);
+  stroke-width: 2;
+  stroke-linecap: round;
 }
+.edge-spawn {
+  stroke: var(--spawn);
+  stroke-dasharray: 4 4;
+}
+.edge-fade-down { opacity: 0.55; }
+.edge-fade-up   { opacity: 0.55; }
 
-/* ルート直下は接続線なし */
-ul.tree > li::before,
-ul.tree > li::after { display: none; }
-ul.tree > li { padding-left: 0; }
-
-/* ---- ノード ---- */
+/* ---- Nodes ---- */
 .node {
-  display: inline-flex;
+  position: absolute;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
@@ -122,10 +111,9 @@ ul.tree > li { padding-left: 0; }
   background: var(--node-bg);
   border: 2px solid var(--node-border);
   cursor: pointer;
-  vertical-align: middle;
   transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.node:hover { transform: scale(1.12); border-color: var(--fg-muted); }
+.node:hover { transform: scale(1.12); border-color: var(--fg-muted); z-index: 1; }
 .node:focus-visible {
   outline: 2px solid var(--current);
   outline-offset: 2px;
@@ -137,58 +125,30 @@ ul.tree > li { padding-left: 0; }
   pointer-events: none;
 }
 
-/* ★ 現在地 */
+/* Current position */
 .node.current {
   border-color: var(--current);
   box-shadow: 0 0 0 4px var(--current-glow);
 }
 
-/* 子タブ分岐ノード(親ツリー側): 丸囲みの色を変える */
+/* Child tab branch node in the parent tree. */
 .node.spawned { border-color: var(--spawn); border-style: dashed; }
 
-/* 子タブ分岐の下に伸びる点線(徐々に透明に) */
-li.spawn-branch .spawn-tail {
-  display: block;
-  width: 2px;
-  height: 22px;
-  margin: 2px 0 0 15px;
-  background: linear-gradient(
-    to bottom,
-    var(--spawn) 0 4px, transparent 4px 8px,
-    var(--spawn) 8px 12px, transparent 12px 16px,
-    color-mix(in srgb, var(--spawn) 40%, transparent) 16px 20px,
-    transparent 20px
-  );
-}
-
-/* 親タブから継承したルート(子ツリー側): 上から降りてくる点線 */
-.inherit-head {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 0 0 2px 15px;
-}
-.inherit-head .inherit-line {
-  width: 2px;
-  height: 26px;
-  background: linear-gradient(
-    to bottom,
-    transparent 0 4px,
-    color-mix(in srgb, var(--spawn) 40%, transparent) 4px 8px, transparent 8px 12px,
-    var(--spawn) 12px 16px, transparent 16px 20px,
-    var(--spawn) 20px 24px, transparent 24px
-  );
-}
-.inherit-head .inherit-label {
+/* Label for roots inherited from a parent tab. */
+.inherit-label {
+  position: absolute;
   font-size: 10px;
   color: var(--spawn);
-  margin: 2px 0 0 -10px;
+  background: none;
+  border: none;
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
+  padding: 2px 4px;
 }
-.inherit-head .inherit-label:hover { text-decoration: underline; }
+.inherit-label:hover { text-decoration: underline; }
 
-/* ---- ツールチップ ---- */
+/* ---- Tooltip ---- */
 .tooltip {
   position: fixed;
   max-width: 260px;
