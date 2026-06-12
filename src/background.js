@@ -1,5 +1,5 @@
 // ============================================================
-// Tab Tree History - background service worker
+// histree - background service worker
 // Tracks each tab's browsing history as a tree.
 // ============================================================
 

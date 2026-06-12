@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Tab Tree History",
+  "name": "histree",
   "version": "0.1.0",
   "description": "タブごとの訪問履歴をツリーで管理。分岐しても元のページへワンクリックで戻れます。",
   "permissions": [

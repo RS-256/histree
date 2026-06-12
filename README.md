@@ -1,4 +1,4 @@
-# Tab Tree History
+# histree
 
 A Chrome/Edge extension that manages each tab's browsing history as a tree.
 Even when navigation branches, you can return to any previous page with one click from the side panel tree.

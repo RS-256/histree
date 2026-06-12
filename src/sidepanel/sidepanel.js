@@ -1,5 +1,5 @@
 // ============================================================
-// Tab Tree History - side panel script
+// histree - side panel script
 // Vertical layout: linear paths go downward, branches spread horizontally.
 // ============================================================
 
