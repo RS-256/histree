@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "histree",
-  "version": "0.1.0",
-  "description": "タブごとの訪問履歴をツリーで管理。分岐しても元のページへワンクリックで戻れます。",
+  "version": "0.1.2",
+  "description": "Manage each tab's browsing history as a tree. Return to the original page with one click, even after branching.",
   "permissions": [
     "tabs",
     "webNavigation",
@@ -17,7 +17,7 @@
     "default_path": "src/sidepanel/sidepanel.html"
   },
   "action": {
-    "default_title": "履歴ツリーを開く"
+    "default_title": "Open History Tree"
   },
   "icons": {
     "16": "icons/icon16.png",

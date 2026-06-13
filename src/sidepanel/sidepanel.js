@@ -177,8 +177,8 @@ async function refresh() {
     const rp = pos[tree.rootId];
     const label = document.createElement("button");
     label.className = "inherit-label";
-    label.textContent = "親タブから";
-    label.title = "クリックで親タブへ移動";
+    label.textContent = "From parent tab";
+    label.title = "Click to switch to the parent tab";
     label.style.left = `${rp.x + 8}px`;
     label.style.top = `4px`;
     label.addEventListener("click", () => {
